@@ -6,26 +6,45 @@ class MoviesController < ApplicationController
       # will render app/views/movies/show.<extension> by default
     end
     
+    def ratingInSession
+      if session[:ratings].nil?
+        false
+      else
+        true
+      end
+    end
+        
+    def sortInSession 
+      if session[:sort].nil?
+        false
+      else
+        true 
+      end
+    end
+    
     
   
     def index
       @all_ratings = {"G"=>"1", "PG"=>"1", "PG-13"=>"1", "R"=>"1"}
-      @ratings = @all_ratings
-      
-      if params.has_key?(:ratings) && params.has_key?(:sort)
-        @ratings = params[:ratings]
-        @movies = Movie.where(:rating=>@ratings.keys).all.order(@params[:sort])
-        # puts "current ratings",@ratings
-      elsif params.has_key?(:sort)
-        @sort = params[:sort]
-        @movies = Movie.all.order(@sort)
-      elsif params.has_key?(:ratings)
-        @ratings = params[:ratings]
-        @movies = Movie.where(:rating=>@ratings.keys).all
+      if params.has_key?(:sort) && !params[:sort].nil?
+        @sort = session[:sort]
+        session[:sort] = @sort
+      elsif self.sortInSession
+        @sort = session[:sort]
       else
-        @movies = Movie.all
+        @sort = nil
       end
-        
+      
+      if params.has_key?(:ratings) && !params[:ratings].nil?
+        @ratings = params[:ratings]
+        session[:ratings] = @ratings
+      elsif self.ratingInSession
+        @ratings = session[:ratings]
+      else
+        @ratings = @all_ratings
+      end
+      
+      @movies = Movie.where(:rating=>@ratings.keys).all.order(@sort)
       # puts "printing params ",params
       # puts @ratings
       # @movies = Movie.all
