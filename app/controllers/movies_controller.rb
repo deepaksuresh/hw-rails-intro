@@ -5,11 +5,29 @@ class MoviesController < ApplicationController
       @movie = Movie.find(id) # look up movie by unique ID
       # will render app/views/movies/show.<extension> by default
     end
+    
+    
   
     def index
-      @sort = params[:sort]
-      @movies = Movie.all.order(@sort)
-      # puts #{@sort}
+      @all_ratings = {"G"=>"1", "PG"=>"1", "PG-13"=>"1", "R"=>"1"}
+      @ratings = @all_ratings
+      
+      if params.has_key?(:ratings) && params.has_key?(:sort)
+        @ratings = params[:ratings]
+        @movies = Movie.where(:rating=>@ratings.keys).all.order(@params[:sort])
+        # puts "current ratings",@ratings
+      elsif params.has_key?(:sort)
+        @sort = params[:sort]
+        @movies = Movie.all.order(@sort)
+      elsif params.has_key?(:ratings)
+        @ratings = params[:ratings]
+        @movies = Movie.where(:rating=>@ratings.keys).all
+      else
+        @movies = Movie.all
+      end
+        
+      # puts "printing params ",params
+      # puts @ratings
       # @movies = Movie.all
     end
   
