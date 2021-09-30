@@ -6,9 +6,9 @@
 <table class="table table-striped col-md-12" id="movies">
   <thead>
     <tr>
-      <th>=link_to "Movie Title", movie_path(sort:"title"), id:"title"</th>
+      <th><%= link_to 'Movie Title', id:@movies%></th>
       <th>Rating</th>
-      <th>=link_to "Release Date", movie_path(sort:"release_date"), id:"release_date"</th>
+      <th><%= link_to 'Release Date', id:@movies%></th>
       <th>More Info</th>
     </tr>
   </thead>
