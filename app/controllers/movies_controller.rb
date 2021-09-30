@@ -26,6 +26,7 @@ class MoviesController < ApplicationController
   
     def index
       @all_ratings = {"G"=>"1", "PG"=>"1", "PG-13"=>"1", "R"=>"1"}
+      # session.clear
       if params.has_key?(:sort) && !params[:sort].nil?
         @sort = session[:sort]
         session[:sort] = @sort
@@ -45,6 +46,7 @@ class MoviesController < ApplicationController
       end
       
       @movies = Movie.where(:rating=>@ratings.keys).all.order(@sort)
+      # redirect_to movies_path(params)
       # puts "printing params ",params
       # puts @ratings
       # @movies = Movie.all
